@@ -1,12 +1,11 @@
-const args = process.argv.slice(2);
+// Дочерний процесс
+process.stdin.on('data', (data) => {
+    // Отправляем данные обратно в stdout
+    process.stdout.write(data);
+});
 
-console.log(`Total number of arguments is ${args.length}`);
-console.log(`Arguments: ${JSON.stringify(args)}`);
+process.on('message', (message) => {
+    console.log('Received message from parent:', message);
+});
 
-const echoInput = (chunk) => {
-    const chunkStringified = chunk.toString();
-    if (chunkStringified.includes('CLOSE')) process.exit(0);
-    process.stdout.write(`Received from master process: ${chunk.toString()}\n`)
-};
-
-process.stdin.on('data', echoInput);
+console.log('Child process started with args:', process.argv.slice(2));
